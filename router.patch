@@ -1,0 +1,79 @@
+diff -ru a/Iplatform/openwrt/ibase/luci/Makefile b/Iplatform/openwrt/ibase/luci/Makefile
+--- a/Iplatform/openwrt/ibase/luci/Makefile	2019-09-16 10:00:48.000000000 +0000
++++ b/Iplatform/openwrt/ibase/luci/Makefile	2024-06-08 16:13:49.629397710 +0000
+@@ -1,5 +1,7 @@
+ include $(TOPDIR)/rules.mk
+ 
++
++
+ PKG_BRANCH:=tags/0.11.1
+ 
+ ifeq ($(DUMP),)
+@@ -14,7 +16,7 @@
+ ifeq ($(USELOCAL),1)
+   PKG_VERSION:=0.11+svn
+ else
+-  PKG_SOURCE_URL:=git://codeaurora.org/quic/qsdk/luci
++  PKG_SOURCE_URL:=https://git.codelinaro.org/clo/qsdk/luci
+   ifeq ($(DUMP),)
+     PKG_REV:=1cdab340cd5ed15be8f25d9fe97accda9ac62ee2
+     PKG_VERSION:=0.11.1
+diff -ru a/Iplatform/openwrt/package/curl/Makefile b/Iplatform/openwrt/package/curl/Makefile
+--- a/Iplatform/openwrt/package/curl/Makefile	2019-09-16 10:00:49.000000000 +0000
++++ b/Iplatform/openwrt/package/curl/Makefile	2024-06-08 14:49:06.677923133 +0000
+@@ -13,6 +13,7 @@
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+ PKG_SOURCE_URL:=http://curl.haxx.se/download/ \
++	https://src.rrz.uni-hamburg.de/object/fa5f37f38a8042020e292ce7ec5341ce-2556495-1360145689/ \
+ 	http://www.mirrorspace.org/curl/ \
+ 	http://curl.mirror.internet.tp/download/ \
+ 	ftp://ftp.sunet.se/pub/www/utilities/curl/ \
+diff -ru a/Iplatform/openwrt/tools/mklibs/Makefile b/Iplatform/openwrt/tools/mklibs/Makefile
+--- a/Iplatform/openwrt/tools/mklibs/Makefile	2019-09-16 10:00:49.000000000 +0000
++++ b/Iplatform/openwrt/tools/mklibs/Makefile	2024-06-08 14:29:09.092205617 +0000
+@@ -10,7 +10,7 @@
+ PKG_VERSION:=0.1.34
+ 
+ PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.gz
+-PKG_SOURCE_URL:=http://ftp.de.debian.org/debian/pool/main/m/mklibs/
++PKG_SOURCE_URL:=https://archive.debian.org/debian/pool/main/m/mklibs
+ PKG_MD5SUM:=afe0ed527ba96b8a882b5de350603007
+ 
+ include $(INCLUDE_DIR)/host-build.mk
+diff -ru a/Iplatform/packages/opensource/dnsmasq/Makefile b/Iplatform/packages/opensource/dnsmasq/Makefile
+--- a/Iplatform/packages/opensource/dnsmasq/Makefile	2019-09-16 10:00:52.000000000 +0000
++++ b/Iplatform/packages/opensource/dnsmasq/Makefile	2024-06-08 18:01:24.586539313 +0000
+@@ -12,7 +12,7 @@
+ PKG_RELEASE:=2
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+-PKG_SOURCE_URL:=http://thekelleys.org.uk/dnsmasq
++PKG_SOURCE_URL:=http://thekelleys.org.uk/dnsmasq/archive
+ PKG_MD5SUM:=f47e5cb8f5bac6343f24b2dbe317ab40
+ 
+ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
+diff -ru a/Iplatform/packages/opensource/improxy/Makefile b/Iplatform/packages/opensource/improxy/Makefile
+--- a/Iplatform/packages/opensource/improxy/Makefile	2019-09-16 10:00:52.000000000 +0000
++++ b/Iplatform/packages/opensource/improxy/Makefile	2024-06-08 18:06:31.440554825 +0000
+@@ -16,7 +16,7 @@
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+ PKG_SOURCE_PROTO:=git
+-PKG_SOURCE_URL:=git://github.com/haibbo/improxy.git
++PKG_SOURCE_URL:=https://github.com/haibbo/improxy.git
+ PKG_BRANCH:=OpenWRT/uClibc
+ PKG_SOURCE_VERSION:=$(PKG_REV)
+
+diff -ru a/Iplatform/packages/opensource/util-linux/Makefile b/Iplatform/packages/opensource/util-linux/Makefile
+--- a/Iplatform/packages/opensource/util-linux/Makefile	2019-09-16 10:00:58.000000000 +0000
++++ b/Iplatform/packages/opensource/util-linux/Makefile	2024-06-08 18:18:42.495615965 +0000
+@@ -12,7 +12,7 @@
+ PKG_RELEASE:=1
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+-PKG_SOURCE_URL:=@KERNEL/linux/utils/$(PKG_NAME)/v2.21
++PKG_SOURCE_URL:=https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.21/
+ PKG_MD5SUM:=54ba880f1d66782c2287ee2c898520e9
+ 
+ PKG_BUILD_PARALLEL:=1
