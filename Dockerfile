@@ -1,4 +1,4 @@
-FROM ubuntu:12.04 as environment
+FROM ubuntu:12.04 AS environment
 WORKDIR /
 
 # Ubuntu has moved old linux packages from archive to old-releases
