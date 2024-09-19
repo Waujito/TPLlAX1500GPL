@@ -1,0 +1,100 @@
+name: Build GPL
+
+on:
+  push:
+    # branches:
+      # - main
+    paths-ignore:
+      - 'README.md'
+
+    workflow_dispatch:
+
+
+jobs:
+  build_gpl:
+    name: build ${{ matrix.gplv }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - gplv: ax1500v1
+            link: "https://static.tp-link.com/upload/gpl-code/2023/202303/20230319/ax1500v1_gpl_20230314.tar.gz"
+            l2tp_retry: "true"
+          - gplv: ax1500v1.2
+            link: "https://static.tp-link.com/upload/gpl-code/2023/202304/20230406/ax1500v1.20_gpl_20230404.tar.gz"
+            l2tp_retry: "true"
+          # - gplv: ax10v1
+          #   link: "https://static.tp-link.com/resources/gpl/ax10v1_gpl_20200701.tar.gz"
+          #   l2tp_retry: "false"
+          # - gplv: ax10v1.2
+          #   link: "https://static.tp-link.com/resources/gpl/ax10v1.20_gpl_20200701.tar.gz"
+          #   l2tp_retry: "false"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build docker image
+        run: |
+          docker pull waujito/tplax1500gpl:1.4
+          docker tag waujito/tplax1500gpl:1.4 router_build
+
+      - name: Prepare gpl code
+        run: |
+          wget -q -O router.tar.gz ${{ matrix.link }}
+          mkdir router
+          tar -xf router.tar.gz -C ./router
+          mv $(find ./router -maxdepth 2 -mindepth 2) ./router
+
+      - name: Patch gpl code
+        run: |
+          docker run --rm -v ./router:/router -w /router --user 1001 router_build bash -c "patch -p1 < ../router.patch"
+          docker run --rm -v ./router:/router -w /router --user 1001 router_build bash -c "mkdir -p Iplatform/openwrt/dl/ && cp /luci-0.11.1.tar.gz /router/Iplatform/openwrt/dl"
+          docker run --rm -v ./router:/router -w /router --user 1001 router_build bash -c "mkdir -p Iplatform/openwrt/dl/ && cp /mtd-utils-1.4.5.tar.gz /router/Iplatform/openwrt/dl"
+
+      - name: Build GPL
+        run: |
+          set -o pipefail
+          if ${{ matrix.l2tp_retry }}; then
+            echo "L2TP retry is ON"
+            docker run --rm -v ./router:/router -w /router/Iplatform/build --user 1001 router_build bash -c "((make SHELL=/bin/bash V=s) || ((echo CONFIG_L2TP_IP=y >> ../../bcm675x/bcm963xx_router/kernel/linux-4.1/.config) && (echo CONFIG_L2TP_ETH=y >> ../../bcm675x/bcm963xx_router/kernel/linux-4.1/.config) && make SHELL=/bin/bash V=s))" | tee build.log
+          else
+            echo "No L2TP retry"
+            docker run --rm -v ./router:/router -w /router/Iplatform/build --user 1001 router_build bash -c "make SHELL=/bin/bash V=s" | tee build.log
+          fi
+
+      - name: Compress built GPL
+        run: |
+          tar -czf gpl-${{ matrix.gplv }}.tar.gz router
+
+      - name: Upload built GPL
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpl-${{ matrix.gplv }}
+          path: ./gpl-${{ matrix.gplv }}.tar.gz
+        
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.gplv }}
+          path: ./build.log
+
+  pre-release:
+    if: github.event_name != 'pull_request' && github.ref_name == 'main'
+    needs: [build_gpl]
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Upload assets
+        uses: slord399/action-automatic-releases@v1.0.1
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: 'continuous'
+          prerelease: true
+          title: 'Development build'
+          files: |
+            ./gpl-*.tar.gz
