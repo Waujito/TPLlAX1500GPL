@@ -89,6 +89,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
 
+
       - name: Upload assets
         uses: slord399/action-automatic-releases@v1.0.1
         with:
@@ -97,4 +98,4 @@ jobs:
           prerelease: true
           title: 'Development build'
           files: |
-            ./gpl-*.tar.gz
+            ./**/gpl-*.tar.gz
