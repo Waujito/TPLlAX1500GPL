@@ -173,7 +173,11 @@ An important thing to options is I didn't find the normal way to write directly 
 
 ## GPL
 
-It is based on ubuntu precise 12.04 and uses docker to run it on any host.
+Here is binary GPL built by [Github Actions](https://github.com/Waujito/TPLlAX1500GPL/actions/workflows/build-gpl.yml) available. Note, that you will want to run it inside the docker image with ubuntu 12.04 anyway.
+
+If you want to build it yourself:
+
+You should build it in an old environment, I use dockerized ubuntu precise 12.04.
 
 How to run:
 - Build a docker image `docker build -t router_build .`
