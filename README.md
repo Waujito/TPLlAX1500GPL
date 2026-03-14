@@ -4,6 +4,8 @@ These scripts are optimized for the TP-Link Archer AX1500 v1, v1.2; Archer AX10 
 
 The GPL sources provided by TP-Link contain a lot of helpful tools to work with these routers. Altough GPL codes do not build binary installable firmware, they provide the kernel and OpenWRT SDK. The OpenWRT SDK allows developers to build their packages and even kernel modules for the router. But GPL is useless if you have no access to your router, so before the compilation of sources, you should [root the router](#rooting).
 
+After rooting you can also [bring back the stock OpenWRT LuCI web-interface](#luci-web-interface).
+
 ## Rooting
 
 For the information and research in the rooting strategies a big thank you goes to [@gmaxus](https://github.com/gmaxus). He got in touch with me and we were able to find the necessary information and finally root the router. 
@@ -172,6 +174,9 @@ But before we start, here is an important thing to mention: if you want to run a
 
 Another thing worth mentioning is that I couldn't find a proper way to write directly to the router's storage but we can normally work within memory (RAM) (just use the /tmp directory). Preparing a script for it to automate everything after each time it reboots is an option. Unfortunately, you'll have to run this script from an http server rather than https since the latter is not supported. 
 
+## LuCI web interface
+
+Lee-soft was able to bring back the stock OpenWRT LuCI web interface and [wrote a guide about it](https://github.com/lee-soft/LuCI-on-TP-Link-Archer-AX1500)
 
 ## GPL
 
